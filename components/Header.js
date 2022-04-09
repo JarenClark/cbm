@@ -1,37 +1,76 @@
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
+import { Hamburger } from "./SVG"
+
 const Header = () => {
 
-    useEffect(() => {
-        let header = document.querySelector('header')
-    }, [])
+    const topMenuItems = [
+        {name:'Capabilities',link:'/'},
+        {name:'The Difference',link:'/'},
+        {name:'Our DNA',link:'/'},       
+        {name:'Careers',link:'/'},
+        {name:'Partners',link:'/'},
+
+    ]
+
+
+    const [position, setPosition] = useState(window.pageYOffset)
+    const [visible, setVisible] = useState(true) 
+    useEffect(()=> {
+        const handleScroll = () => {
+           let moving = window.pageYOffset
+           
+           setVisible(position > moving);
+           setPosition(moving)
+        };
+        window.addEventListener("scroll", handleScroll);
+        return(() => {
+           window.removeEventListener("scroll", handleScroll);
+        })
+    })
+
+    
+    const visClass = visible ? `translate-y-0`: `-translate-y-32`
 
     return(
-        <header className="fixed top-0 w-screen">
-            <div className="container mx-auto">
+        <div className="fixed top-0 w-screen">
+            <header className={`container mx-auto transform duration-500 ${visClass}`}>
                 <div className="flex justify-between items-center py-2">
+                    <div className="inline-flex items-center">
                     <Link href={'/'}>
-                        <Image 
-                            src={'/img/cbm-color-1.png'}
-                            alt={'logo'}
-                            width={250}
-                            height={90}
-                        />
+                        <a className="block">
+                            <Image 
+                                src={'/img/cbm-color-1.png'}
+                                alt={'logo'}
+                                width={250}
+                                height={90}
+                            />
+                        </a>
                     </Link>
-                    <div className="flex items-center space-x-4">
-                            <p className="text-gray-300 font-bold hover:text-green-500">About Us</p>
-                            <p className="text-gray-300 font-bold hover:text-green-500">Capabilities</p>
-                            <Link href={`/press`}>
-                                <a className="font-bold hover:text-green-500">Press</a>
-                            </Link>
-                            <button className="rounded-lg py-2 px-6 font-bold bg-green-500 text-white hover:bg-black">
-                                Contact
-                            </button>
+                    <ul className="flex items-center space-x-4 mx-4">
+                        {topMenuItems.map((item,i) => (
+                            <li key={i} className="font-bold uppercase text-white hover:text-blue-900">{item.name}</li>
+                        ))}
+                    </ul>
+
                     </div>
+                    <div className="px-4">
+                        <button className={`
+                        font-bold
+                        flex items-center
+                        rounded-full px-4 py-2
+                        space-x-2 
+                        text-white bg-black bg-opacity-20
+                        hover:bg-blue-900 hover:bg-opacity-100`}>
+                             <Hamburger />
+                            <span>DISCOVER MORE</span>
+                        </button>
+                    </div>
+
                 </div>
-            </div>
-        </header>
+            </header>
+        </div>
     )
 }
 
