@@ -1,8 +1,14 @@
 import Image from "next/image"
 import Link from "next/link"
+import { useEffect } from "react"
 const Header = () => {
+
+    useEffect(() => {
+        let header = document.querySelector('header')
+    }, [])
+
     return(
-        <header>
+        <header className="fixed top-0 w-screen">
             <div className="container mx-auto">
                 <div className="flex justify-between items-center py-2">
                     <Link href={'/'}>
